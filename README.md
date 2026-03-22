@@ -26,6 +26,7 @@ The dataset includes:
 ## ⚙️ Project Workflow
 
 1️⃣ Data Import & Initial Setup
+
 - Imported dataset into Power BI
 - Verified column data types (Date, Numeric, Text)
 - Created a dedicated **Date Table** using DAX:
@@ -40,35 +41,42 @@ The dataset includes:
   )
 
 2️⃣ Data Modeling
+
 Established relationships:
 DateTable[Date] → Main dataset date column
 Created a star-like schema for better performance
 Ensured correct filter direction and granularity
 
 3️⃣ Data Transformation (Power Query)
+
 Split in_demand_skills column into rows
 Created a new table: job_market_skills
 Cleaned and standardized skill values
 Enabled many-to-one relationship with main dataset
 
 4️⃣ Core Measures (DAX)
+
 🔹 Base Measures
 Average Unemployment Rate = AVERAGE('job_market_unemployment_trends'[unemployment_rate])
 Total Job Postings = SUM('job_market_unemployment_trends'[job_postings])
+
 🔹 Time Intelligence
-Unemployment MoM Change =
-VAR Prev = CALCULATE([Average Unemployment Rate], PREVIOUSMONTH('DateTable'[Date]))
+Unemployment MoM Change = VAR Prev = CALCULATE([Average Unemployment Rate], PREVIOUSMONTH('DateTable'[Date]))
 RETURN DIVIDE([Average Unemployment Rate] - Prev, Prev)
+
 🔹 Skill Demand
 Skill Demand = COUNT('job_market_skills'[Skill])
+
 🔹 Skill Gap Index
 Derived by comparing unemployment levels and skill demand
 Represents mismatch between labor supply and demand
+
 🔹 Hotspot Score
 Combines:
 Unemployment level
 Growth trends
 Used to detect high-risk regions
+
 🔹 Retraining Priority Index
 Composite index combining:
 Unemployment Rate
@@ -77,6 +85,7 @@ Hotspot Score
 Final metric for policy prioritization
 
 5️⃣ Handling Multi-Skill Allocation (Advanced Modeling)
+
 Since job postings were not available at the skill level:
 Created proportional allocation logic:
 Skill Weight =
@@ -86,24 +95,29 @@ DIVIDE(
 )
 Adjusted Job Postings by Skill =
 [Total Job Postings] * [Skill Weight]
+
 📌 This ensures meaningful distribution of job postings across skills.
 
 6️⃣ KPI Development
+
 Created KPI measures:
 Average Unemployment Rate
 Total Job Postings
 Hotspot Score
+
 Handled:
 Blank values in KPI cards
 Context issues using MAX(Date)
 Proper percentage formatting
 
 7️⃣ Insight Measures (Dynamic Text Analytics)
+
 Created measures for:
 Highest Priority Region
 Lowest Priority Region
 Using:
 SUMMARIZE + MAXX / MINX + CONCATENATEX
+
 Also implemented:
 Global vs slicer-aware logic
 Filter context control using REMOVEFILTERS
@@ -134,6 +148,7 @@ Lowest Priority Region
 Assumptions & methodology section
 
 9️⃣ Advanced Features
+
 Custom Tooltip Page for Retraining Priority
 Conditional formatting (color scales)
 Top N filtering for skills
