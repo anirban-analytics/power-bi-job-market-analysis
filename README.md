@@ -1,87 +1,184 @@
-# 📊 Job Market Insights Dashboard  
+# 📊 Job Market Insights Dashboard (Power BI)
 
-🚀 Interactive Power BI dashboard analyzing job market trends, skill demand, and regional workforce gaps.
+## 🔍 Project Overview
+This project presents an interactive **Job Market Insights Dashboard** built using Power BI to analyze unemployment trends, job postings, and skill demand across regions from **2019 to 2023**.  
 
-![Dashboard Preview](images/overview.png)
+The objective is to identify:
+- Regional unemployment patterns  
+- Skill demand trends  
+- Workforce skill gaps  
+- Areas requiring targeted retraining interventions  
+
+A composite **Retraining Priority Index** is developed to support data-driven decision-making for policymakers and workforce planners.
 
 ---
 
-## 🔍 Key Highlights
-- 📉 Unemployment trend analysis  
-- 📊 Skill demand insights  
-- 🌍 Regional job market comparison  
-- 🎯 Retraining priority index  
+## 📁 Dataset Description
+The dataset includes:
+- Monthly unemployment rates  
+- Job postings count  
+- In-demand skills (multi-valued field)  
+- Workforce demographics (age, education)  
+- Regional identifiers  
 
+---
 
-## 📌 Problem Statement
-Understanding job market dynamics and unemployment trends is essential for workforce planning and policy-making. This project analyzes regional job market patterns to identify skill gaps and retraining priorities.
+## ⚙️ Project Workflow
 
-## 🎯 Objective
-- Analyze unemployment trends over time
-- Identify in-demand skills across regions
-- Detect skill gaps in the workforce
-- Provide data-driven policy insights
+1️⃣ Data Import & Initial Setup
+- Imported dataset into Power BI
+- Verified column data types (Date, Numeric, Text)
+- Created a dedicated **Date Table** using DAX:
+  ```DAX
+  DateTable =
+  ADDCOLUMNS(
+      CALENDAR(DATE(2019,1,1), DATE(2023,12,31)),
+      "Year", YEAR([Date]),
+      "MonthNumber", MONTH([Date]),
+      "MonthName", FORMAT([Date], "MMM"),
+      "YearMonth", FORMAT([Date], "YYYY-MM")
+  )
 
-## 🛠 Tools Used
-- Power BI
+2️⃣ Data Modeling
+Established relationships:
+DateTable[Date] → Main dataset date column
+Created a star-like schema for better performance
+Ensured correct filter direction and granularity
 
-## 📁 Dataset
-- **Source**: Job Market & Unemployment Trends Dataset (synthetic dataset for analysis from Kaggle)
-- **Description**:  
-  This dataset contains information on job market conditions across multiple locations over time. It includes unemployment rates, job postings, in-demand skills, and demographic indicators, enabling analysis of labor market dynamics and skill demand patterns.
+3️⃣ Data Transformation (Power Query)
+Split in_demand_skills column into rows
+Created a new table: job_market_skills
+Cleaned and standardized skill values
+Enabled many-to-one relationship with main dataset
 
-## 📊 Features
-- **id**: Unique identifier for each record  
-- **date**: Date of observation (time-series data)  
-- **location**: City or region of the job market data  
-- **unemployment_rate**: Percentage of unemployed individuals in the region  
-- **job_postings**: Number of job listings available  
-- **in_demand_skills**: Skills most frequently requested by employers  
-- **average_age**: Average age of the workforce in the region  
-- **college_degree_percentage**: Percentage of population with a college degree  
+4️⃣ Core Measures (DAX)
+🔹 Base Measures
+Average Unemployment Rate = AVERAGE('job_market_unemployment_trends'[unemployment_rate])
+Total Job Postings = SUM('job_market_unemployment_trends'[job_postings])
+🔹 Time Intelligence
+Unemployment MoM Change =
+VAR Prev = CALCULATE([Average Unemployment Rate], PREVIOUSMONTH('DateTable'[Date]))
+RETURN DIVIDE([Average Unemployment Rate] - Prev, Prev)
+🔹 Skill Demand
+Skill Demand = COUNT('job_market_skills'[Skill])
+🔹 Skill Gap Index
+Derived by comparing unemployment levels and skill demand
+Represents mismatch between labor supply and demand
+🔹 Hotspot Score
+Combines:
+Unemployment level
+Growth trends
+Used to detect high-risk regions
+🔹 Retraining Priority Index
+Composite index combining:
+Unemployment Rate
+Skill Gap Index
+Hotspot Score
+Final metric for policy prioritization
 
-## ▶️ How to Use
-1. Download the `.pbix` file from the repository  
-2. Open in Power BI Desktop  
-3. Use filters (location, time, skills) to explore insights  
+5️⃣ Handling Multi-Skill Allocation (Advanced Modeling)
+Since job postings were not available at the skill level:
+Created proportional allocation logic:
+Skill Weight =
+DIVIDE(
+    [Skill Demand],
+    CALCULATE([Skill Demand], ALL(job_market_skills[Skill]))
+)
+Adjusted Job Postings by Skill =
+[Total Job Postings] * [Skill Weight]
+📌 This ensures meaningful distribution of job postings across skills.
 
-## 📊 Dashboard Overview
+6️⃣ KPI Development
+Created KPI measures:
+Average Unemployment Rate
+Total Job Postings
+Hotspot Score
+Handled:
+Blank values in KPI cards
+Context issues using MAX(Date)
+Proper percentage formatting
 
-### 1️⃣ Executive Overview
+7️⃣ Insight Measures (Dynamic Text Analytics)
+Created measures for:
+Highest Priority Region
+Lowest Priority Region
+Using:
+SUMMARIZE + MAXX / MINX + CONCATENATEX
+Also implemented:
+Global vs slicer-aware logic
+Filter context control using REMOVEFILTERS
+
+8️⃣ Dashboard Design (Power BI)
+
+📄 Page 1: Job Market Overview
 ![Overview](images/overview.png)
+KPI cards
+Unemployment trend line chart
+Regional hotspot comparison
+Slicers (Date, Region)
 
-### 2️⃣ Skill Demand Analysis
+📄 Page 2: Skill Demand Analysis
 ![Skills](images/skill_analysis.png)
+Top 10 in-demand skills
+Estimated job postings by skill and region
+Skill vs job opportunity distribution
+Slicers (Skill, Region, Time)
 
-### 3️⃣ Policy Insights & Skill Gap
+📄 Page 3: Retraining Priority & Insights
 ![Policy](images/policy_insights.png)
+Retraining Priority Table
+Conditional formatting (Red → High priority)
+Insight Cards:
+Highest Priority Region
+Lowest Priority Region
+Assumptions & methodology section
 
-### 4️⃣ Conclusion & Recommendations
-![Conclusion](images/conclusion.png)
+9️⃣ Advanced Features
+Custom Tooltip Page for Retraining Priority
+Conditional formatting (color scales)
+Top N filtering for skills
+Dynamic slicer interactions
+Professional theme integration (Microsoft Fabric themes)
 
-## 📈 Key Insights
-- Unemployment rates show a declining trend over time, indicating gradual recovery in the job market.
-- High-demand skills include Python, Project Management, and UI/UX Design.
-- Significant skill gaps exist between job requirements and workforce capabilities.
-- Seattle has the highest retraining priority, while Houston has the lowest.
-- Regional disparities highlight the need for targeted workforce policies.
+🎨 Dashboard Design Principles
+Consistent color palette across pages
+Clear visual hierarchy
+Minimal clutter with high readability
+Context-aware titles and labels
+
+⚠️ Assumptions & Limitations
+Skill demand inferred from job postings (proxy-based)
+Job postings distributed proportionally across skills
+Retraining Priority is a relative index (not absolute)
+Data availability may affect regional comparisons
+
+📈 Key Insights
+Significant regional disparities in unemployment and skill gaps
+High job postings do not always reduce unemployment
+Strong evidence of structural skill mismatch
+Retraining needs vary dynamically over time
+
+🎯 Recommendations
+Implement region-specific retraining programs
+Align workforce training with in-demand skills
+Use dashboards for continuous monitoring
+Allocate resources based on priority index
 
 ## 💡 Business Impact
 - Helps policymakers identify regions requiring workforce development  
 - Assists job seekers in understanding in-demand skills  
 - Supports organizations in aligning hiring strategies with market trends  
 
-## 🚀 Conclusion
-This dashboard provides a comprehensive view of labor market dynamics and supports data-driven decision-making for workforce development and policy planning.
+🚀 Future Enhancements
+Predictive modeling for unemployment trends
+Integration of salary/wage data
+Demographic segmentation analysis
+Real-time data pipeline integration
 
-## 🧠 Skills Demonstrated
-- Data Visualization  
-- Dashboard Design  
-- Data Storytelling  
-- Business Analysis  
-- KPI Development  
+🏁 Conclusion
+This project demonstrates how data analytics and visualization can transform labor market data into actionable insights, enabling informed policy decisions and targeted workforce development strategies.
 
-## 📌 Future Improvements
-- Incorporate real-time job market data
-- Enhance skill demand forecasting
-- Deploy dashboard online for wider accessibility
+## ▶️ How to Use
+1. Download the `.pbix` file from the repository  
+2. Open in Power BI Desktop  
+3. Use filters (location, time, skills) to explore insights  
