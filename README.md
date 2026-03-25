@@ -36,6 +36,34 @@ This dashboard bridges the gap between data and decision-making.
 - 🎯 Built retraining priority index for workforce planning  
 
 
+## 🧠 Skills Demonstrated
+
+### 📊 Data Visualization & BI Tools
+- Power BI Dashboard Development  
+- Data Modeling (Power BI)  
+- DAX Basics (Calculated Measures & KPIs)  
+
+### 🔍 Data Analysis
+- Exploratory Data Analysis (EDA)  
+- Trend Analysis (Time-series insights)  
+- Comparative Regional Analysis  
+
+### 📈 Business Intelligence
+- KPI Design & Performance Metrics  
+- Workforce & Job Market Analysis  
+- Skill Gap Identification  
+- Decision Support Analytics  
+
+### 🎯 Data Storytelling
+- Dashboard Design & Layout Optimization  
+- Insight Generation from Data  
+- Business-Oriented Visualization  
+
+### ⚙️ Data Handling
+- Data Cleaning & Transformation  
+- Working with Structured Datasets (CSV/Excel)  
+
+
 ## 🚀 Key Features
 - 📈 Interactive dashboards (3 pages)
 - 📊 KPI tracking (Unemployment, Job Postings, MoM Change)
@@ -128,16 +156,7 @@ A composite score based on:
 - Advanced demographic segmentation
 
 ---
-
-## 🧠 Skills Demonstrated
-
-- Power BI Dashboard Development  
-- Data Cleaning & Transformation  
-- KPI & Metric Design  
-- Data Storytelling  
-- Business Insight Generation  
-
-
+  
 ## ▶️ How to Use
 1. Download the `.pbix` file  
 2. Open in Power BI Desktop  
