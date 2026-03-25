@@ -27,6 +27,7 @@ Understanding job market dynamics is crucial for:
 
 This dashboard bridges the gap between data and decision-making.
 
+---
 
 ## ⚡ Quick Summary
 
@@ -35,6 +36,7 @@ This dashboard bridges the gap between data and decision-making.
 - 🌍 Compared job market conditions by location  
 - 🎯 Built retraining priority index for workforce planning  
 
+---
 
 ## 🧠 Skills Demonstrated
 
@@ -63,6 +65,7 @@ This dashboard bridges the gap between data and decision-making.
 - Data Cleaning & Transformation  
 - Working with Structured Datasets (CSV/Excel)  
 
+---
 
 ## 🚀 Key Features
 - 📈 Interactive dashboards (3 pages)
@@ -177,6 +180,7 @@ Data Analytics Enthusiast
 
 ⭐ If you like this project, consider giving it a star!
 
+---
 
 ## 📬 Feedback
 
